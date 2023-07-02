@@ -69,7 +69,7 @@ def set_global_seed(seed=-1):
     print("------------------------------------------\n")
     random.seed(seed)
     np.random.seed(random.randint(0, 2 ** 32))
-    sp.random.seed(random.randint(0, 2 ** 32))
+    # sp.random.seed(random.randint(0, 2 ** 32))
     torch.manual_seed(random.randint(0, 2 ** 32))
     torch.cuda.manual_seed(random.randint(0, 2 ** 32))
     torch.cuda.manual_seed_all(random.randint(0, 2 ** 32))
