@@ -12,10 +12,11 @@ from cython.parallel cimport prange
 cdef cnp.ndarray[int, ndim=2] __make_basis_idxs_cy(int N):
     cdef:
         Py_ssize_t i, j
+        int total = 1 << N
         cnp.ndarray[int, ndim=1] d = 1 << np.arange(N, dtype=np.int32)
-        cnp.ndarray[int, ndim=2] out = np.empty((2**N, N), dtype=np.int32)
+        cnp.ndarray[int, ndim=2] out = np.empty((total, N), dtype=np.int32)
 
-    for i in prange(2**N, nogil=True):
+    for i in prange(total, nogil=True):
         for j in range(N):
             out[i,j] = i & d[j]
 
@@ -26,10 +27,11 @@ cdef cnp.ndarray[int, ndim=2] __make_basis_idxs_cy(int N):
 cdef cnp.ndarray[long, ndim=2] __make_basis_idxs_int64_cy(int N):
     cdef:
         Py_ssize_t i, j
+        int total = 1 << N
         cnp.ndarray[int, ndim=1] d = 1 << np.arange(N, dtype=np.int64)
         cnp.ndarray[int, ndim=2] out = np.empty((2**N, N), dtype=np.int64)
 
-    for i in prange(2**N, nogil=True):
+    for i in prange(total, nogil=True):
         for j in range(N):
             out[i,j] = i & d[j]
 
@@ -37,7 +39,7 @@ cdef cnp.ndarray[long, ndim=2] __make_basis_idxs_int64_cy(int N):
 
 @cython.boundscheck(False) # turn off bounds-checking
 @cython.wraparound(False)  # turn off negative index wrapping
-def make_basis_idxs_cy(N, dtype=np.int32):
+def make_basis_idxs_cy(int N, dtype=np.int32):
     if dtype is np.int64:
         return __make_basis_idxs_int64_cy(N)
     else:
